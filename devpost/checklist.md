@@ -49,7 +49,7 @@ Build mode: fast
   Learner check: run `npm start`, drop a sample.
   Commit: `Add web UI with before/after view`
 
-- [ ] **5. Demo video, docs and ship**
+- [x] **5. Demo video, docs and ship**
   Becomes usable: `demo/altpass-demo.mp4` (< 3 min), README, DEVPOST_SUBMISSION.md.
   Why now: submission requirements.
   PRD ref: `prd.md > What We're Building`
@@ -64,9 +64,14 @@ Build mode: fast
 - [x] Final: after slice 4 — drove the browser flow (sample, upload, non-PDF error, alt edit, downloads, 320px reflow, keyboard) in `test/ui.test.js` and by screenshots; fixed an app-UI contrast failure axe found (`.check.na` opacity).
 
 ## Final Review
-- [ ] Core journey works end to end in a browser.
+- [x] Core journey works end to end in a browser: sample click and file upload to result, live axe, alt edit, downloads (`test/ui.test.js`, 8 browser tests), plus a recorded run (`demo/record.js`).
 
 ## Code Tour and App Map
-- [ ] `devpost/app-map.html` written.
+- [x] `devpost/app-map.html` written as a static reference route (one action traced through `public/app.js`, `src/server.js`, `src/pipeline.js`, `src/audit.js`). It was not toured interactively with a learner: this build was done by an agent from the brief. Reflection: not asked.
 
 ## Revisions
+- **Planning interview.** The learner profile was derived from the project brief, not from a live interview (no one was available to answer); no learning outcome was established.
+- **Real-world PDFs (slice 1 uncertainty, resolved in slice 5).** Testing PDFs written by LibreOffice and Chrome (not just the pdfkit samples) exposed a gap: tables with centred headers, padded rows or narrow gutters were flattened to paragraphs. Fixed in `src/structure.js` (`mergeTableRows`, cell splitting at word-space gaps, columns taken from body rows, an alignment requirement for narrow gutters). Fixtures in `test/fixtures/`, tests in `test/real-producers.test.js`. Still not handled: merged cells, tables without consistent column alignment, scanned PDFs.
+- **Colour contrast in the app's own UI (slice 4).** The browser axe run found low contrast in the "not applicable" check rows (reduced opacity); fixed and guarded by `test/ui.test.js`.
+- **LLM adapters.** Implemented and tested against a mock server only: no provider key was available in the build environment.
+- **Video.** Recorded by script (`demo/record.js`): captions only, no audio, about 98 s.
