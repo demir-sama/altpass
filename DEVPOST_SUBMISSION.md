@@ -1,6 +1,6 @@
 # AltPass: Devpost submission pack
 
-> **Draft for you to review and edit in your own words.** The Devpost Learn skill pack asks that learners write their own submission copy; this is a starting point prepared from the real project (everything in it is true of the repo as built). Edit freely before pasting. Nothing here has been submitted.
+> **Status: submitted** at https://devpost.com/software/altpass. This file is the submission pack the entry was prepared from. The Devpost Learn skill pack asks that learners write their own submission copy; this was a starting point prepared from the real project (everything in it is true of the repo as built).
 
 Hackathon: Build With AI: Basics (https://learn-ai-basics.devpost.com/). Deadline: **26 Oct 2026, 5:00 pm EDT = 10:00 pm in Lagos (WAT)**.
 
@@ -15,10 +15,10 @@ Turn an inaccessible PDF into accessible HTML, with a score and an axe-core proo
 (Alternative, under 60 characters: "Make any PDF pass accessibility checks")
 
 ### Public code repository URL
-`<GitHub URL: fill in after the repo is pushed>`  (public, MIT licence file at the repo root, planning docs `scope.md`, `prd.md`, `spec.md` at the root)
+https://github.com/demir-sama/altpass  (public, MIT licence file at the repo root, planning docs `scope.md`, `prd.md`, `spec.md` at the root)
 
 ### Demo video URL (YouTube or Vimeo, public)
-`<YouTube URL: fill in after upload>`  File: `demo/altpass-demo.mp4`, 1 minute 38 seconds (limit is 3 minutes), captions only, no music, no voice-over.
+https://youtu.be/lPGszOaxCVQ  File: `demo/altpass-demo-voice.mp4`, about 2 minutes (limit is 3 minutes), captions plus a voice-over narration (script in `demo/narration.md`), no music. A captions-only cut without voice-over is kept as `demo/altpass-demo.mp4`.
 
 ### Try it out / live link (optional)
 None. AltPass runs locally (`npm install && npm start`, see README). A hosted version is not deployed.
@@ -53,15 +53,15 @@ Solo (you). Add teammates if any.
 ### Exit survey / other form questions
 These ask for your own reflections; write them yourself. Facts you can draw on are in the "What I learned" section above and in `devpost/checklist.md` (Revisions).
 
-## YouTube upload (video is not uploaded yet)
+## YouTube upload (done)
 
-- File: `demo/altpass-demo.mp4` (H.264, 1280x720, about 1 min 38 s, ~9 MB).
+- File: `demo/altpass-demo-voice.mp4` (narrated, about 2 min). Published at https://youtu.be/lPGszOaxCVQ.
 - Title: `AltPass: turn an inaccessible PDF into accessible HTML (demo)`
 - Visibility: **Public** (the rules require publicly visible; unlisted may not be accepted). Not made for kids.
-- Description (draft): `AltPass audits a PDF and rebuilds it as accessible HTML, with a before/after score and a live axe-core proof. Built for Devpost "Build With AI: Basics". Code: <GitHub URL>. Alt text in this demo is rule-based (no AI key), flagged for human review.`
-- The video contains no music, no voice-over and no third-party logos.
+- Description (draft): `AltPass audits a PDF and rebuilds it as accessible HTML, with a before/after score and a live axe-core proof. Built for Devpost "Build With AI: Basics". Code: https://github.com/demir-sama/altpass. Alt text in this demo is rule-based (no AI key), flagged for human review.`
+- The video has a voice-over (script in `demo/narration.md`), no music and no third-party logos.
 
-## What the video shows (about 98 s)
+## What the video shows (about 2 min, narrated)
 
 1. Title card (4 s).
 2. The problem: untagged PDFs, the before/after slider on the sample page.
@@ -75,7 +75,7 @@ These ask for your own reflections; write them yourself. Facts you can draw on a
 ## Testing instructions for judges
 
 ```bash
-git clone <repo URL> && cd altpass
+git clone https://github.com/demir-sama/altpass && cd altpass
 npm install
 npm start          # open http://127.0.0.1:3000 and click one of the three sample chips
 ```
@@ -89,9 +89,9 @@ Node.js 20 or newer. No account, key or login is needed. To use a vision model, 
 - Innovation: fix and prove in one step instead of a checker report; the screen-reader transcript comparison.
 - Presentation: the video follows one document from upload to downloads.
 
-## Remaining steps (not done by the build)
+## Steps (all done)
 
 1. Review and edit this file; write the exit-survey answers yourself.
-2. Create the public GitHub repo and push (see the commands in the build report). Check the licence shows in the About box.
-3. Upload `demo/altpass-demo.mp4` to YouTube as Public and copy the link.
-4. Fill in the Devpost form (fields above), attach the repo and video links, and submit before **22:00 WAT today**.
+2. Public GitHub repo created and pushed: https://github.com/demir-sama/altpass.
+3. Narrated demo uploaded to YouTube as Public: https://youtu.be/lPGszOaxCVQ.
+4. Submitted on Devpost: https://devpost.com/software/altpass.

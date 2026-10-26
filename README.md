@@ -6,7 +6,9 @@
 
 Most tools stop at *telling you* a PDF is inaccessible. AltPass rebuilds the document's real structure (language, title, headings, reading order, lists, tables, links, image alt text) as accessible HTML, scores the PDF and the HTML with the same weighted checklist, and runs [axe-core](https://github.com/dequelabs/axe-core) on the output, live in your browser.
 
-Built for the Devpost [Build With AI: Basics](https://learn-ai-basics.devpost.com/) hackathon, using the Devpost Learn Skill Pack. The planning documents it produced are in the repo: [`scope.md`](scope.md), [`prd.md`](prd.md), [`spec.md`](spec.md), plus [`devpost/checklist.md`](devpost/checklist.md) and a code tour in [`devpost/app-map.html`](devpost/app-map.html).
+[**Watch the demo on YouTube**](https://youtu.be/lPGszOaxCVQ) (narrated, about 2 minutes). Source: https://github.com/demir-sama/altpass.
+
+Built for the Devpost [Build With AI: Basics](https://learn-ai-basics.devpost.com/) hackathon, using the Devpost Learn Skill Pack. Submitted at https://devpost.com/software/altpass. The planning documents it produced are in the repo: [`scope.md`](scope.md), [`prd.md`](prd.md), [`spec.md`](spec.md), plus [`devpost/checklist.md`](devpost/checklist.md) and a code tour in [`devpost/app-map.html`](devpost/app-map.html).
 
 ## Why
 
@@ -82,7 +84,9 @@ The server binds to `127.0.0.1` by default and keeps results in memory for one h
 
 ## Demo video
 
-`node demo/record.js` re-records `demo/altpass-demo.mp4` (about 100 seconds, captions only) by driving the real app with Playwright and transcoding with ffmpeg.
+Watch the narrated demo (about 2 minutes, with voice-over): https://youtu.be/lPGszOaxCVQ. The file is in the repo as [`demo/altpass-demo-voice.mp4`](demo/altpass-demo-voice.mp4), and the narration script is [`demo/narration.md`](demo/narration.md).
+
+`node demo/record.js` re-records the captions-only cut `demo/altpass-demo.mp4` (about 100 seconds, no voice-over) by driving the real app with Playwright and transcoding with ffmpeg.
 
 ## Licence and credits
 
