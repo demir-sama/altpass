@@ -59,7 +59,7 @@ export function buildAudit({ raw, doc, render, axeAfter, axeBefore }) {
   add('images', 'Images have text alternatives', '1.1.1',
     imgs.length === 0 ? { status: NA, detail: 'No images.' } : { status: FAIL, detail: `${imgs.length} image${imgs.length === 1 ? '' : 's'} without alternative text.` },
     imgs.length === 0 ? { status: NA, detail: 'No images.' }
-      : drafts.length ? { status: WARN, detail: `${nonDeco.length - drafts.length} of ${nonDeco.length} described; ${drafts.length} machine-drafted ${drafts.length === 1 ? 'description needs' : 'descriptions need'} a human check.${imgs.length - nonDeco.length ? ` ${imgs.length - nonDeco.length} decorative hidden.` : ''}` }
+      : drafts.length ? { status: WARN, detail: `${nonDeco.length} of ${nonDeco.length} described, but ${drafts.length === nonDeco.length ? (drafts.length === 1 ? 'the description is' : 'all descriptions are') : `${drafts.length} ${drafts.length === 1 ? 'is' : 'are'}`} machine-drafted and awaiting a human check.${imgs.length - nonDeco.length ? ` ${imgs.length - nonDeco.length} decorative hidden.` : ''}` }
       : { status: PASS, detail: `All ${nonDeco.length} images described${imgs.length - nonDeco.length ? `; ${imgs.length - nonDeco.length} decorative hidden` : ''}.` },
     { fixed: `Drafted alt text for ${nonDeco.length} image${nonDeco.length === 1 ? '' : 's'}${imgs.length - nonDeco.length ? ` and hid ${imgs.length - nonDeco.length} decorative` : ''}.` });
 

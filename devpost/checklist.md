@@ -39,7 +39,7 @@ Build mode: fast
   Learner check: see figures with alt in the output.
   Commit: `Add image extraction and pluggable alt-text adapters`
 
-- [ ] **4. Web app with before/after hero**
+- [x] **4. Web app with before/after hero**
   Becomes usable: upload or pick a sample in the browser and see the full result view and download.
   Why now: the product experience (design) is judged and the video is recorded from it.
   PRD ref: `prd.md > The Core Journey`, `prd.md > Screens and Layout`, `prd.md > Look and Feel`
@@ -61,7 +61,7 @@ Build mode: fast
 
 ## Hands-on Checkpoints
 - [x] Early: after slice 1 — heading inference checked on the three samples (outlines printed by the CLI and asserted in `test/pipeline.test.js`).
-- [ ] Final: after slice 4 — kick the tires in the browser.
+- [x] Final: after slice 4 — drove the browser flow (sample, upload, non-PDF error, alt edit, downloads, 320px reflow, keyboard) in `test/ui.test.js` and by screenshots; fixed an app-UI contrast failure axe found (`.check.na` opacity).
 
 ## Final Review
 - [ ] Core journey works end to end in a browser.

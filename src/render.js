@@ -158,5 +158,5 @@ ${main}</main>
 </body>
 </html>
 `;
-  return { html, renderStats: stats, headings: headings.map((h) => ({ level: Math.min(Math.max(h.level, 2), 6), text: runsText(h.runs), id: h.id })), h1: h1Text };
+  return { html, hasToc: !!toc, renderStats: stats, headings: headings.map((h) => ({ level: Math.min(Math.max(h.level, 2), 6), text: runsText(h.runs), id: h.id })), h1: h1Text };
 }
