@@ -9,7 +9,7 @@ Build mode: fast
 
 ## Slices
 
-- [ ] **1. A sample PDF becomes accessible HTML (CLI)**
+- [x] **1. A sample PDF becomes accessible HTML (CLI)**
   Becomes usable: `npm run audit -- samples/council-agenda.pdf -o out.html` writes a standalone accessible HTML file with headings, lists, links, language and title.
   Why now: pdf.js on Node 20 and heading inference are the biggest technical risk and the heart of the kernel.
   PRD ref: `prd.md > Structure rebuilding`, `prd.md > Output`
@@ -19,7 +19,7 @@ Build mode: fast
   Learner check: open `out.html` with a screen reader or browser and check the outline.
   Commit: `Add PDF extraction, structure inference and accessible HTML renderer`
 
-- [ ] **2. Audit, score and axe-core proof**
+- [x] **2. Audit, score and axe-core proof**
   Becomes usable: CLI/JSON prints before/after score, checklist of fixes, axe pass rate for naive vs accessible HTML.
   Why now: the "proof" is half of the kernel.
   PRD ref: `prd.md > Audit, score and proof`
@@ -29,7 +29,7 @@ Build mode: fast
   Learner check: read the printed report.
   Commit: `Add audit, score and axe-core verification`
 
-- [ ] **3. Images get alt text through a pluggable adapter**
+- [x] **3. Images get alt text through a pluggable adapter**
   Becomes usable: figures in the output carry alt text flagged for review; OpenAI/Anthropic adapters selectable by env.
   Why now: alt text is the most visible accessibility fix.
   PRD ref: `prd.md > Alt text`
@@ -60,7 +60,7 @@ Build mode: fast
   Commit: `Add demo video script, README and submission text`
 
 ## Hands-on Checkpoints
-- [ ] Early: after slice 1 — check heading inference on the samples.
+- [x] Early: after slice 1 — heading inference checked on the three samples (outlines printed by the CLI and asserted in `test/pipeline.test.js`).
 - [ ] Final: after slice 4 — kick the tires in the browser.
 
 ## Final Review
