@@ -1,0 +1,31 @@
+{
+  "name": "altpass",
+  "version": "0.1.0",
+  "description": "Upload an inaccessible PDF, get an accessibility audit and a fixed, screen-reader-friendly HTML version.",
+  "license": "MIT",
+  "type": "module",
+  "private": false,
+  "scripts": {
+    "start": "node src/server.js",
+    "samples": "node scripts/make-samples.js",
+    "test": "node --test test/",
+    "audit": "node src/cli.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource-variable/inter": "^5.3.0",
+    "axe-core": "^4.14.0",
+    "express": "^5.3.0",
+    "jsdom": "23.2.0",
+    "multer": "^2.5.0",
+    "pdfjs-dist": "5.5.207",
+    "pngjs": "^7.0.0"
+  },
+  "devDependencies": {
+    "pdfkit": "^0.20.2",
+    "playwright": "^1.64.1"
+  }
+}
