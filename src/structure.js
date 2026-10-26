@@ -69,6 +69,20 @@ function itemRuns(item, links) {
 }
 
 // ---------------------------------------------------------------- lines
+// Re-split a line into table cells: like segments, but items join only across a word space (<= 0.4 em), so narrow column gutters survive.
+function cellSegs(textSegs, links) {
+  const cells = [];
+  for (const it of textSegs.flatMap((sg) => sg.items)) {
+    const prev = cells.at(-1);
+    if (prev && it.x - prev.x2 <= 0.4 * Math.max(it.size, 8)) {
+      const gap = it.x - prev.x2;
+      if (gap > 0.12 * it.size && !/\s$/.test(prev.last) && !/^\s/.test(it.str)) pushRun(prev.runs, ' ');
+      for (const r of itemRuns(it, links)) pushRun(prev.runs, r.t, r.href);
+      prev.x2 = it.x + it.w; prev.last = it.str; prev.chars += it.str.length;
+    } else cells.push({ x: it.x, x2: it.x + it.w, runs: itemRuns(it, links), last: it.str, chars: it.str.length, bold: it.bold });
+  }
+  return cells.filter((c) => c.chars && runsText(c.runs).trim());
+}
 function buildLines(items, links) {
   const sorted = [...items].sort((a, b) => a.y - b.y || a.x - b.x);
   const rows = [];
@@ -107,12 +121,15 @@ function buildLines(items, links) {
       if (m) { marker = 'bullet'; markerLabel = m[1]; } else if (n) { marker = 'ordered-inline'; markerLabel = n[1]; }
     }
     const textSegs = segs.filter((s, i) => !(i === 0 && s.marker));
+    const cells = cellSegs(textSegs, links);
     const size = Math.max(...segs.map((s) => s.size));
     const chars = segs.reduce((n, s) => n + s.chars, 0);
     const bold = segs.filter((s) => !s.marker).every((s) => s.bold);
     const italic = segs.filter((s) => !s.marker).every((s) => s.italic);
     return { y: row.y, size, segs, textSegs, x: segs[0].x, x2: segs.at(-1).x2, chars, bold, italic, marker, markerLabel,
-      multi: textSegs.length >= 2 && textSegs.some((s, i) => i > 0 && s.x - textSegs[i - 1].x2 >= 1.6 * Math.max(s.size, 8)) };
+      multi: textSegs.length >= 2 && textSegs.some((s, i) => i > 0 && s.x - textSegs[i - 1].x2 >= 1.6 * Math.max(s.size, 8)),
+      // tight: separate segments with a narrower gutter (narrow table columns); only trusted as a table when 3+ rows align
+      cells, tight: cells.length >= 2 };
   });
 }
 const lineRuns = (line, keepMarker = false) => {
@@ -161,7 +178,23 @@ function horizontalCut(entries, gapMin) {
     if (e.top - bottom >= gapMin) { bands.push(cur); cur = [e]; bottom = e.bottom; } else { cur.push(e); bottom = Math.max(bottom, e.bottom); }
   }
   bands.push(cur);
-  return bands;
+  return mergeTableRows(bands, gapMin);
+}
+// Padded table rows (cell padding or ruled rows) are further apart than the band gap: glue consecutive one-line bands
+// made of short cells back together so the table survives as one region. A pair is harmless; 3+ becomes a table.
+function mergeTableRows(bands, gapMin) {
+  const rowLike = (l) => l.cells.length >= 2 && l.cells.every((g) => g.chars < LONG_LINE) && !l.marker;
+  const linesOf = (band) => (band.every((e) => e.kind === 'text') ? regionRows(band) : null);
+  const out = [];
+  for (const band of bands) {
+    const prev = out.at(-1), ls = linesOf(band);
+    if (prev && prev.endsInRow && ls && ls.length === 1 && rowLike(ls[0])) {
+      const gap = Math.min(...band.map((e) => e.top)) - Math.max(...prev.map((e) => e.bottom));
+      if (gap < 3 * gapMin) { prev.push(...band); continue; }
+    }
+    out.push(band); band.endsInRow = !!(ls && rowLike(ls.at(-1)));
+  }
+  return out;
 }
 function orderRegions(entries, ctx, depth = 0) {
   if (!entries.length) return [];
@@ -291,23 +324,29 @@ function regionToBlocks(region, page, blocks, images, { body, stats, kind }) {
     const prevGap = prevLine ? line.y - prevLine.y : Infinity;
 
     // ---- table
-    if (line.multi && !line.marker) {
-      let j = i; const rows = [];
-      const cols = line.textSegs.map((g) => ({ x: g.x, x2: g.x2 }));
-      while (j < seq.length && seq[j].t === 'line' && seq[j].l.multi && !seq[j].l.marker) {
-        const l = seq[j].l;
-        const ok = l.textSegs.every((g) => cols.some((c) => Math.abs(g.x - c.x) < 7 || Math.abs(g.x2 - c.x2) < 7));
-        if (!ok) break; rows.push(l); j++;
-      }
-      if (rows.length >= 3) {
-        flush();
-        const cell = (l, ci) => { const g = l.textSegs.find((g) => nearestCol(g, cols) === ci); return g ? g.runs : []; };
-        const toRuns = (rs) => rs.length ? rs : [{ t: '' }];
-        blocks.push({ type: 'table', page: page.n,
-          header: cols.map((_, ci) => toRuns(cell(rows[0], ci))),
-          rows: rows.slice(1).map((l) => cols.map((_, ci) => toRuns(cell(l, ci)))),
-          headerBold: rows[0].bold });
-        prevLine = rows.at(-1); i = j; para = null; continue;
+    if ((line.multi || line.tight) && !line.marker) {
+      const cand = []; let j = i;
+      while (j < seq.length && seq[j].t === 'line' && (seq[j].l.multi || seq[j].l.tight) && !seq[j].l.marker) { cand.push(seq[j].l); j++; }
+      if (cand.length >= 3) {
+        // Columns come from the body row with the most cells (a header is often centred over its column, so it cannot define them).
+        const ref = cand.slice(1).reduce((best, l) => (l.cells.length > best.cells.length ? l : best), cand[1]);
+        const cols = ref.cells.map((g) => ({ x: g.x, x2: g.x2 }));
+        const colOf = (g) => { let k = -1; cols.forEach((c, q) => { if (g.x >= c.x - 7) k = q; }); return k; };
+        const fits = (l) => { const ks = l.cells.map(colOf); return ks.every((k) => k >= 0) && new Set(ks).size === ks.length; };
+        const rows = []; for (const l of cand) { if (!fits(l)) break; rows.push(l); }
+        // Narrow gutters are only believed as a table when the body rows line up exactly (left or right edges), unlike justified text.
+        const lined = (ls) => ls.length >= 2 && cols.every((c, q) => q === 0 ? true : ls.every((l) => { const g = l.cells.find((g) => colOf(g) === q); return !g || Math.abs(g.x - c.x) <= 2.5 || Math.abs(g.x2 - c.x2) <= 2.5 || ls.every((m) => Math.abs((m.cells.find((h) => colOf(h) === q)?.x2 ?? c.x2) - c.x2) <= 2.5); }));
+        const wide = rows.slice(1).every((l) => l.multi);
+        if (rows.length >= 3 && (wide || lined(rows.slice(1)))) {
+          flush();
+          const cell = (l, ci) => { const g = l.cells.find((g) => colOf(g) === ci); return g ? g.runs : []; };
+          const toRuns = (rs) => rs.length ? rs : [{ t: '' }];
+          blocks.push({ type: 'table', page: page.n,
+            header: cols.map((_, ci) => toRuns(cell(rows[0], ci))),
+            rows: rows.slice(1).map((l) => cols.map((_, ci) => toRuns(cell(l, ci)))),
+            headerBold: rows[0].bold });
+          prevLine = rows.at(-1); i += rows.length; para = null; continue;
+        }
       }
     }
 
